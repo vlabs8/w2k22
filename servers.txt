@@ -1,0 +1,3 @@
+DC1.vlabs8.com
+DC2.vlabs8.com
+CORE-DC.vlabs8.com
