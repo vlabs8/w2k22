@@ -22,7 +22,7 @@ New-ADGroup -Name AWMarketing -GroupCategory Security -GroupScope Universal -Dis
 New-ADGroup -Name AWResearch -GroupCategory Security -GroupScope Universal -DisplayName AW_Research -Path "OU=Research,OU=AdventureWorks,DC=vlabs8,DC=com"
 
 # Create Users
-Import-Csv -Path .\w2k22\ADUsers\AdventureWorksUsers.csv | ForEach-Object {New-ADUser -AccountPassword $SecurePWD -GivenName $_.FirstName -Surname $_.LastName -Name $_.DisplayName -DisplayName $_.DisplayName -SamAccountName $_.FirstName -UserPrincipalName $_.UPN -Path $_.OU -PasswordNeverExpires $true -Enabled $true}
+Import-Csv -Path .\AdventureWorksUsers.csv | ForEach-Object {New-ADUser -AccountPassword $SecurePWD -GivenName $_.FirstName -Surname $_.LastName -Name $_.DisplayName -DisplayName $_.DisplayName -SamAccountName $_.FirstName -UserPrincipalName $_.UPN -Path $_.OU -PasswordNeverExpires $true -Enabled $true}
 
 # Add to Groups
 Get-ADUser -Filter * -SearchBase "OU=AdventureWorks,DC=vlabs8,DC=com" | ForEach-Object {Add-ADGroupMember -Identity 'AllAdventureWorks' -Members $_}
