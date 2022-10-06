@@ -29,3 +29,7 @@ Get-ADUser Gates
 exit
 Restore-VMCheckpoint -Name 'vlabs domain istalled' -VMName temp -Confirm:$false
 start-vm temp
+
+stop-vm temp -Force
+Remove-VM temp -Force
+Remove-Item -Recurse e:\vm\temp -Force
