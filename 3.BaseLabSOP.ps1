@@ -35,8 +35,8 @@ start-vm DC1,DC2,CORE-DC,CL1
 
 # First DC (DC1) 
 # Enter-PSSession
-
-etsn -VMName DC1 -Credential administrator
+$Credentials=Get-Credential
+etsn -VMName DC1 -Credential $Credentials
 
 # Rename and add to the domain
 Rename-Computer DC1 -Verbose -Restart -Force
@@ -56,7 +56,7 @@ Install-ADDSForest -CreateDnsDelegation:$false -DatabasePath "C:\Windows\NTDS" -
 # Second DC (CORE-DC)
 
 # Enter-PSSession
-etsn -VMName CORE-DC -Credential administrator
+etsn -VMName CORE-DC -Credential $Credentials
 
 Get-NetAdapter 
 # Check for InterfaceIndex and set it in below commands accordingly "–InterfaceIndex #"
@@ -78,7 +78,7 @@ Install-ADDSDomainController -DomainName "vlabs8.com" -InstallDns:$true -Credent
 # Add a Sub-Domain (Child Domain)(DC2)
 
 # Enter-PSSession
-etsn -VMName DC2 -Credential administrator
+etsn -VMName DC2 -Credential $Credentials
 
 Rename-Computer DC2 -Verbose -Restart -Force
 
