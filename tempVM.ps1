@@ -74,6 +74,7 @@ New-ADUser -Name $firstname -UserPrincipalName $principalname -Given $lastname -
 
 # Restore Checkpoint
 exit
+stop-vm temp -Force
 Restore-VMCheckpoint -Name 'vlabs domain istalled' -VMName temp -Confirm:$false
 start-vm temp
 
