@@ -58,12 +58,14 @@ $firstname = (Get-Random -InputObject $UserNames);
 $lastname = (Get-Random -InputObject $LastNames);
 $department = (Get-Random -InputObject $Departments);
 $fullname = "{0} {1}" -f ($firstname , $lastname);
-$Description = $fullname + ", " + $Department
+$Description = $fullname 
 $SamAccountName = ("{0}.{1}" -f ($firstname, $lastname)).ToLower();
 $principalname = "{0}.{1}" -f ($firstname, $lastname);
+$OUs = @('ou=Sales,dc=vlabs8,dc=com', '$OU = "ou=Development,dc=vlabs8,dc=com',"ou=IT,dc=vlabs8,dc=com","ou=Managers,dc=vlabs8,dc=com","ou=Marketing,dc=vlabs8,dc=com","ou=Research,dc=vlabs8,dc=com")
+$OU = (Get-Random -InputObject $OUs);
 
 # Create new user from generated data
-New-ADUser -Name $firstName -UserPrincipalName $principalname -Given $lastname -Surname $lastname -DisplayName $fullname -Path $OU -Department $department -Description $Description -AccountPassword $SecurePass -Enabled $true	
+New-ADUser -Name $firstname -UserPrincipalName $principalname -Given $lastname -Surname $lastname -DisplayName $fullname -Path $OU -Description $Description -AccountPassword $SecurePass -Enabled $true	
 
 
 
