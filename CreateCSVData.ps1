@@ -34,8 +34,7 @@ $employees = @(
 
   Country = "NO"
 
-  MobilePhone = "5551234" `
-
+  MobilePhone = "5551234" 
 
   }
 
