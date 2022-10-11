@@ -65,7 +65,8 @@ $OUs = @('ou=Sales,dc=vlabs8,dc=com', '$OU = "ou=Development,dc=vlabs8,dc=com',"
 $OU = (Get-Random -InputObject $OUs);
 
 # Create new user from generated data
-New-ADUser -Name $firstname -UserPrincipalName $principalname -Given $lastname -Surname $lastname -DisplayName $fullname -Path $OU -Description $Description -AccountPassword $SecurePass -Enabled $true	
+#New-ADUser -Name $firstname -UserPrincipalName $principalname -Given $lastname -Surname $lastname -DisplayName $fullname -Path $OU -Description $Description -AccountPassword $SecurePass -Enabled $true	
+New-ADUser -Name $firstname -UserPrincipalName $principalname -Given $lastname -Surname $lastname -DisplayName $fullname -Description $Description -AccountPassword $SecurePass -Enabled $true	
 
 
 
