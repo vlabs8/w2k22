@@ -13,6 +13,10 @@ Add-ADGroupMember "VLabsManagement" -Members "CN=Joe,OU=VLabs Users,DC=vlabs8,DC
 Get-ADGroup -filter * -properties * -searchbase "OU=VLabs Users,DC=vlabs8,DC=Com"
 # List Groups' Members
 Get-ADGroupMember "VLabsManagement"
+# Remove ADDS Objects
+Remove-ADOrganizationalUnit -Identity "OU=VLabs Users,DC=VLABS8,DC=COM" -Confirm:$False -Verbose
+Remove-ADUser -Identity "CN=Joe,OU=VLabs Users,DC=vlabs8,DC=com" -Confirm:$False -Verbose
+Remove-ADGroup -Identity VLabsManagement -Confirm:$False -Verbose
 
 
 
