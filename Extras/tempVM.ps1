@@ -1,18 +1,20 @@
-﻿$Credentials=Get-Credential
-New-VHD -ParentPath E:\VM\vhd\w2k22gui.vhdx -Path e:\vm\temp\temp.vhdx -Differencing -Verbose
-New-VM -Name temp -MemoryStartupBytes 4Gb -VHDPath e:\vm\temp\temp.vhdx -Path e:\vm\temp  -Generation 1 -SwitchName Ext
-Set-VMProcessor temp -Count 4
-set-vm temp -CheckpointType Disabled
-start-vm temp -verbose
-etsn -VMName temp -Credential $Credentials
+﻿
+$Credentials=Get-Credential
+New-VHD -ParentPath E:\VM\vhd\w2k22gui.vhdx -Path e:\vm\ROUTER\router.vhdx -Differencing -Verbose
+New-VM -Name ROUTER -MemoryStartupBytes 4Gb -VHDPath e:\vm\ROUTER\router.vhdx -Path e:\vm\ROUTER  -Generation 1 -SwitchName Ext
+Set-VMProcessor ROUTER -Count 4
+set-vm ROUTER -CheckpointType Disabled
+start-vm ROUTER -verbose
+etsn -VMName ROUTER -Credential $Credentials
 
 # Can be skipped
 $DomainCredentials=Get-Credential
-Rename-Computer DC1test -Verbose -Restart -Force
-etsn -VMName temp -Credential $DomainCredentials
+Rename-Computer ROUTER -Verbose -Restart -Force
+
+etsn -VMName ROUTER -Credential $Credentials
 Get-NetAdapter
-New-NetIPAddress –IPAddress 192.168.1.210 -DefaultGateway 192.168.1.1 -PrefixLength 24 -InterfaceIndex 14
-Set-DNSClientServerAddress –InterfaceIndex 14 –ServerAddresses 127.0.0.1,192.168.1.1
+New-NetIPAddress –IPAddress 192.168.1.215 -DefaultGateway 192.168.1.1 -PrefixLength 24 -InterfaceIndex 7
+Set-DNSClientServerAddress –InterfaceIndex 7 –ServerAddresses 192.168.1.150,192.168.1.1
 
 # Install ADDS
 Install-WindowsFeature -Name AD-Domain-Services -IncludeManagementTools
@@ -20,15 +22,18 @@ Import-Module ADDSDeployment
 Install-ADDSForest -CreateDnsDelegation:$false -DatabasePath "C:\Windows\NTDS" -DomainMode "WinThreshold" -DomainName "vlabs8.com" -DomainNetbiosName "VLABS8" -ForestMode "WinThreshold" -InstallDns:$true -LogPath "C:\Windows\NTDS" -NoRebootOnCompletion:$false -SysvolPath "C:\Windows\SYSVOL" -Force:$true
 
 #Checkpoint VM
-stop-vm temp -force -verbose
-set-vm temp -CheckpointType Standard
-set-VM -Name temp -AutomaticCheckpointsEnabled $false
-checkpoint-VM -Name temp -SnapshotName 'vlabs domain istalled'
-start-vm temp -Verbose
+stop-vm ROUTER
+set-vm ROUTER -CheckpointType Standard
+set-VM -Name ROUTER -AutomaticCheckpointsEnabled $false
+checkpoint-VM -Name ROUTER -SnapshotName 'base lab'
+
+#Add to Domain
+Add-Computer -DomainName vlabs8.com -Credential vlabs8\administrator -Verbose -Restart -Force
+
 
 # Copy Git Repo
-$DomainCredentials=Get-Credential
-etsn -VMName temp -Credential $DomainCredentials
+$DomainCredentials=Get-Credential vlabs8\administrator
+etsn -VMName ROUTER -Credential $DomainCredentials
 sl C:\
 git clone https://github.com/vlabs8/w2k22
 
@@ -75,11 +80,11 @@ New-ADUser -Name $firstname -UserPrincipalName $principalname -Given $lastname -
 
 # Restore Checkpoint
 exit
-stop-vm temp -Force
-Restore-VMCheckpoint -Name 'vlabs domain istalled' -VMName temp -Confirm:$false
-start-vm temp
+stop-vm ROUTER -Force
+Restore-VMCheckpoint -Name 'vlabs domain istalled' -VMName ROUTER -Confirm:$false
+start-vm ROUTER
 
 # Destroy VM
-stop-vm temp -Force
-Remove-VM temp -Force
-Remove-Item -Recurse e:\vm\temp -Force
+stop-vm ROUTER -Force
+Remove-VM ROUTER -Force
+Remove-Item -Recurse e:\vm\ROUTER -Force
