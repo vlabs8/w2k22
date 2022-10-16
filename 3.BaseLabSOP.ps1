@@ -117,7 +117,8 @@ etsn -VMName CL1 -Credential vlabs8\administrator
 # Install WAC locally on the Cl1
 start msedge https://www.microsoft.com/en-us/evalcenter/download-windows-admin-center
 
-
+# Add Virtualization for Hyper--V Role
+Set-VMProcessor -VMName DC2 -ExposeVirtualizationExtensions $true
 
 # Create checkpoints
 stop-vm DC1,DC2,CORE-DC,CL1
