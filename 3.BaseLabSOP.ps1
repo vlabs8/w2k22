@@ -24,6 +24,10 @@ New-VM -Name CORE-DC -MemoryStartupBytes 512Mb -VHDPath e:\vm\CORE-DC\CORE-DC.vh
 New-VHD -ParentPath E:\VM\vhd\win11.vhdx -Path e:\vm\CL1\CL1.vhdx -Differencing -Verbose
 New-VM -Name CL1 -MemoryStartupBytes 3Gb -VHDPath e:\vm\CL1\CL1.vhdx -Path e:\vm\CL1  -Generation 1 -SwitchName Ext
 
+# To create a NAT virtual switch, use the following Windows PowerShell command:
+# New-VMSwitch -Name “NATSwitch” -SwitchType NAT -NATSubnetAddress 172.16.1.0/24
+
+
 # Checkpoints (https://www.thomasmaurer.ch/2020/07/how-to-manage-hyper-v-vm-checkpoints-with-powershell/)
 set-vm DC1,DC2,CORE-DC,CL1 -CheckpointType Disabled
 start-vm DC1,DC2,CORE-DC,CL1
